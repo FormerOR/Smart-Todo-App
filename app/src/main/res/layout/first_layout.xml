@@ -71,7 +71,6 @@
             android:background="#FEFEFE"
             android:gravity="center_horizontal"
             android:lineSpacingExtra="8sp"
-            android:text="                 此处显示AI对您待办的建议"
             android:textAlignment="textStart"
             android:textColor="#333333"
             android:textSize="16sp"
@@ -82,10 +81,25 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Version:1.0.0 By LucasLynn"
+        android:text="@string/version_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="下方显示AI对您待办的建议"
+        android:textColor="#202021"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Button_get_adv"
+        app:layout_constraintVertical_bias="0.85" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
