@@ -15,4 +15,8 @@ public class ChatCompletion {
         int completion_tokens;
         int total_tokens;
     }
+
+    public String getResult() {
+        return result;
+    }
 }

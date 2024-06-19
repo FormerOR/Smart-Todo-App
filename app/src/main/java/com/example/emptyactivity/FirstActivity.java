@@ -40,25 +40,60 @@ public class FirstActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Sample Sample1 = new Sample();
-                        try {
-                            String content = Sample1.start(user_input_edit.getText().toString());
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adv_text.setText(content);
-                                    Toast.makeText(FirstActivity.this, content, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(FirstActivity.this, "Exception!", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                        int times = 0;
+                        // 执行5次请求，直到成功就停止
+                        for (times = 0; times < 5; times++) {
+                            try {
+                                // 调用Sample.start方法，传入用户输入的内容
+                                Sample Sample1 = new Sample();
+                                String content = Sample1.start(user_input_edit.getText().toString());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adv_text.setText(content);
+                                        Toast.makeText(FirstActivity.this, content, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                break;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                int finalI = times;
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(FirstActivity.this, String.format("服务器开了点小差，正在重试...(%d)", finalI+1), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                            //  如果失败，toast提示用户
+                            if (times == 4) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(FirstActivity.this, "服务器开了点小差，请重试", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
                         }
+//                        Sample Sample1 = new Sample();
+//                        try {
+//                            String content = Sample1.start(user_input_edit.getText().toString());
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    adv_text.setText(content);
+//                                    Toast.makeText(FirstActivity.this, content, Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    Toast.makeText(FirstActivity.this, "服务器开了点小差，请重试", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                        }
                     }
                 }).start();
 //                Toast.makeText(FirstActivity.this, "你按到获取建议按钮了", Toast.LENGTH_SHORT).show();

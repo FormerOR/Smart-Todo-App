@@ -45,13 +45,27 @@ public class Sample {
         Gson gson = new Gson();
         ChatCompletion chatCompletion = gson.fromJson(Response_string, ChatCompletion.class);
 
-        String displayText = "活动详情:\n"
-                + "开始时间：" + chatCompletion.result.split("\\n")[0] + "\n"
-                + "结束时间：" + chatCompletion.result.split("\\n")[1] + "\n"
-                + "具体内容：" + chatCompletion.result.split("\\n")[2].replaceFirst("具体内容：", "") + "\n"
-                + "准备：" + chatCompletion.result.split("\\n")[3].replaceFirst("准备：", "") + "\n"
-                + "建议：" + chatCompletion.result.split("\\n")[4].replaceFirst("建议：", "");
-        return displayText;
+//        String displayText = "活动详情:\n"
+//                + "开始时间：" + chatCompletion.result.split("\\n")[0] + "\n"
+//                + "结束时间：" + chatCompletion.result.split("\\n")[1] + "\n"
+//                + "具体内容：" + chatCompletion.result.split("\\n")[2].replaceFirst("具体内容：", "") + "\n"
+//                + "准备：" + chatCompletion.result.split("\\n")[3].replaceFirst("准备：", "") + "\n"
+//                + "建议：" + chatCompletion.result.split("\\n")[4].replaceFirst("建议：", "");
+//
+
+        // 提取result字段，并根据\n分隔内容
+        String result = chatCompletion.getResult();
+        String[] lines = result.split("\n");
+        System.out.println(lines);
+
+        // 构建显示的文本
+        StringBuilder displayText = new StringBuilder();
+        for (String line : lines) {
+            // 添加到显示文本中
+            displayText.append(line).append("\n");
+        }
+
+        return displayText.toString().trim();
     }
 
 
