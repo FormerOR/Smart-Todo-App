@@ -34,9 +34,7 @@ public class SecondActivity extends AppCompatActivity {
             int num = Integer.parseInt(textView.getText().toString());
             textView.setText(String.valueOf(num + 1));
             // 播放音效
-            if (!mediaPlayer.isPlaying()) {
-                mediaPlayer.start();
-            }
+            mediaPlayer.start();
 
             // 切换图片,根据图片列表的顺序切换
             String[] imageList = {"cj", "jsj","yhq","lxf","cjz"};
