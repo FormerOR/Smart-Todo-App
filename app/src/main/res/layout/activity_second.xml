@@ -9,17 +9,66 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#51AEEEF8">
 
         <Button
-            android:id="@+id/Button_get_adv"
+            android:id="@+id/Button_page2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="这是第二页的按钮"
+            android:elevation="20dp"
+            android:text="Tap"
+            android:textAllCaps="false"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.721" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="casual"
+            android:text="0"
+            android:textColor="#121111"
+            android:textSize="96sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            app:layout_constraintBottom_toTopOf="@+id/Button_page2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.848" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/page2_tip1"
+            android:textColor="#BF2962FF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:typeface="sans"
+            app:layout_constraintBottom_toTopOf="@+id/textView4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.782" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="68dp"
+            android:layout_height="66dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/cjz"
+            android:visibility="visible"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

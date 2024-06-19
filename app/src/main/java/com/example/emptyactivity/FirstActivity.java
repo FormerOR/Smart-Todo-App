@@ -1,12 +1,14 @@
 package com.example.emptyactivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +33,17 @@ public class FirstActivity extends AppCompatActivity {
 
         });
 
+        //设置mediaPlayer
+        final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.bling);
         TextView adv_text = (TextView) findViewById(R.id.textView2);
         EditText user_input_edit = (EditText) findViewById(R.id.editTextText);
         Button button2 = (Button) findViewById(R.id.Button_get_adv);
+        ProgressBar wait_bar = (ProgressBar) findViewById(R.id.progressBar);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 点击按钮后，显示进度条
+                wait_bar.setVisibility(View.VISIBLE);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -51,7 +58,13 @@ public class FirstActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         adv_text.setText(content);
-                                        Toast.makeText(FirstActivity.this, content, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(FirstActivity.this, "已获取到建议", Toast.LENGTH_SHORT).show();
+                                        // 播放音效
+                                        if (!mediaPlayer.isPlaying()) {
+                                            mediaPlayer.start();
+                                        }
+                                        // 隐藏进度条
+                                        wait_bar.setVisibility(View.GONE);
                                     }
                                 });
                                 break;
@@ -71,6 +84,8 @@ public class FirstActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         Toast.makeText(FirstActivity.this, "服务器开了点小差，请重试", Toast.LENGTH_SHORT).show();
+                                        // 隐藏进度条
+                                        wait_bar.setVisibility(View.GONE);
                                     }
                                 });
                             }
