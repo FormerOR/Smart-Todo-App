@@ -15,6 +15,9 @@
         android:theme="@style/Theme.EmptyActivity"
         tools:targetApi="31">
         <activity
+            android:name=".AdviseActivity"
+            android:exported="false" />
+        <activity
             android:name=".SecondActivity"
             android:exported="false" />
         <activity
