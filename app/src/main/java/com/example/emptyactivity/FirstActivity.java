@@ -1,15 +1,21 @@
 package com.example.emptyactivity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,7 +36,8 @@ public class FirstActivity extends AppCompatActivity {
         // 从布局文件中加载视图
         LayoutInflater inflater = LayoutInflater.from(this);
         //设置mediaPlayer
-        final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.bling);
+        final MediaPlayer mediaPlayer_bling = MediaPlayer.create(this, R.raw.bling);
+        final MediaPlayer mediaPlayer_ding = MediaPlayer.create(this, R.raw.ding);
         // 获取控件
         TextView adv_text = (TextView) findViewById(R.id.textView2);
         EditText user_input_edit = (EditText) findViewById(R.id.editTextText);
@@ -42,11 +49,12 @@ public class FirstActivity extends AppCompatActivity {
         TextView version_text = (TextView) findViewById(R.id.textView_version);
 
         // 添加点击事件——获取建议
-        onClickGetAdvice(button2, wait_bar, user_input_edit, adv_text, mediaPlayer);
+//        onClickGetAdvice(button2, wait_bar, user_input_edit, adv_text, mediaPlayer);
+        onClickGetAdvice(button2);
         // 添加点击事件——切换到活动2
         onClickNextPage(button1);
         // 添加点击事件——添加待办事项
-        onClickAddTodoItem(button3, inflater, todo_list, user_input_edit);
+        onClickAddTodoItem(button3, inflater, todo_list, user_input_edit, mediaPlayer_ding);
         // 添加点击事件——打开github
         onClickOpenGithub(version_text);
 
@@ -75,45 +83,114 @@ public class FirstActivity extends AppCompatActivity {
 
     static private int todo_item_count = 0;
 
-    private void onClickAddTodoItem(Button button3, LayoutInflater inflater, LinearLayout todo_list, EditText editText) {
+    public void vibrator(long milliseconds) {
+        // 获取Vibrator服务
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        // 检查是否存在Vibrator服务并且设备支持震动
+        if (vibrator != null && vibrator.hasVibrator()) {
+            // 设定震动模式，参数为震动持续时间和间隔时间，单位为毫秒
+            // 例如，下面的代码会让设备震动500毫秒，然后停止200毫秒，再震动500毫秒
+            long[] pattern = {0, milliseconds, 200, milliseconds};
+
+            // 执行震动。第二个参数为重复次数，-1表示不重复
+            vibrator.vibrate(pattern, -1);
+        }
+    }
+
+    private void onClickAddTodoItem(Button button3, LayoutInflater inflater, LinearLayout todo_list, EditText editText, MediaPlayer mediaPlayer) {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 todo_item_count++;
-                CardView cardView = (CardView) inflater.inflate(R.layout.cardview_item, null, false);
+                final CardView cardView = (CardView) inflater.inflate(R.layout.cardview_item, null, false);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-                // 设置间距等参数
                 layoutParams.setMargins(10, 10, 10, 10);
-                // 设置颜色
                 cardView.setCardBackgroundColor(0x254CABF3);
-                // 设置elvation
                 cardView.setCardElevation(1);
-                // 设置圆角
                 cardView.setRadius(12);
                 cardView.setLayoutParams(layoutParams);
-                // 查找CardView中的TextView
-                TextView textView = cardView.findViewById(R.id.textView_todo);
-                // 设置TextView的内容
-                textView.setText(editText.getText().toString());
 
-                // 设置CardView的点击监听器
+                TextView textView = cardView.findViewById(R.id.textView_todo);
+                ImageView imageView = cardView.findViewById(R.id.imageView_todo);
+                textView.setText(editText.getText().toString());
+                String todo = editText.getText().toString().trim();
+
                 cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(FirstActivity.this, "切换到建议活动", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(FirstActivity.this, AdviseActivity.class);
-                        // 传递数据
-                        intent.putExtra("data", editText.getText().toString());
+                        intent.putExtra("data", todo);
                         startActivity(intent);
                     }
                 });
 
+                //为imageView设置点击事件
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 切换图片（点亮和熄灭）
+                        // 先获取两张图片分别为@android:drawable/btn_star_big_off和@android:drawable/btn_star_big_on
+                        // 然后判断当前图片是否为@android:drawable/btn_star_big_off，如果是则切换为@android:drawable/btn_star_big_on，否则切换为@android:drawable/btn_star_big_off
+                        if (imageView.getDrawable().getConstantState().equals(getResources().getDrawable(android.R.drawable.btn_star_big_off).getConstantState())) {
+                            imageView.setImageResource(android.R.drawable.btn_star_big_on);
+                            vibrator(300);
+                            Toast.makeText(FirstActivity.this, "已完成待办！", Toast.LENGTH_SHORT).show();
+                            // 将文本划去
+                            textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                            // 播放音效
+                            mediaPlayer.start();
+
+                        } else {
+                            imageView.setImageResource(android.R.drawable.btn_star_big_off);
+                            vibrator(100);
+                            Toast.makeText(FirstActivity.this, "取消完成状态", Toast.LENGTH_SHORT).show();
+                            // 取消文本划去
+                            textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                        }
+                    }
+                });
+
+                // 设置长按监听器
+                cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        showDeleteConfirmationDialog(cardView, todo_list);
+                        return true; // 返回true表示已经处理了长按事件
+                    }
+                });
+
+                if (!todo.isEmpty()) {
+                    editText.setText(""); // 清空输入框
+                    Toast.makeText(FirstActivity.this, "待办事项已添加", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(FirstActivity.this, "待办事项不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 todo_list.addView(cardView);
-                Toast.makeText(FirstActivity.this, "已添加待办事项", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(FirstActivity.this, "已添加待办事项", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // 显示删除确认对话框的方法
+    private void showDeleteConfirmationDialog(final CardView cardView , LinearLayout todo_list) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("删除提醒");
+        builder.setMessage("确定要删除这个待办事项吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                todo_list.removeView(cardView);
+                Toast.makeText(FirstActivity.this, "待办事项已删除", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
     }
 
     private void onClickNextPage(Button button1) {
@@ -127,6 +204,15 @@ public class FirstActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
+        });
+    }
+
+    private void onClickGetAdvice(Button btn){
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(FirstActivity.this, "Tip：获取建议前，请先点击待办事项", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

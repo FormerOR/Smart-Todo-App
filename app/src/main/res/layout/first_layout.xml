@@ -130,7 +130,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="下方显示AI对您待办的建议"
+        android:text="下方将显示待办事项，点击后可跳转至建议"
         android:textColor="#202021"
         android:textSize="16sp"
         android:textStyle="bold"
